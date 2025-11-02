@@ -1,0 +1,195 @@
+<!-- Archivo: login/login.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="../logo/Icono-Petshop.png" />
+  <title>Login - MimirPetShop</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+
+  <!-- Scripts globales -->
+  <script src="../js/admin-access.js" defer></script>
+</head>
+<body>
+  <!-- NAVBAR (idéntico al index, con rutas relativas ajustadas) -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="../index.html" class="logo-link" id="logoLink">
+          <div class="logo">
+            <img src="../logo/Icono-Petshop.png" alt="Logo PetShop" id="logoImage" />
+          </div>
+          <span class="brand">MimirPetShop</span>
+        </a>
+      </div>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="../index.html#nosotros" class="nav-link">Nosotros</a>
+
+        <div class="dropdown">
+          <!-- Enlace directo a productos -->
+          <a href="../veterinaria/productos.html" class="nav-link">Productos</a>
+
+          <!-- (Opcional) contenido desplegable con atajos a secciones -->
+          <div class="dropdown-content" role="menu" aria-label="Categorías de productos">
+            <div class="dropdown-item">
+              <button class="dropdown-link" type="button">Perro <span class="arrow-right">▶</span></button>
+              <div class="subdropdown" role="menu">
+                <a href="../veterinaria/productos.html#perro-comida" role="menuitem">Comida</a>
+                <a href="../veterinaria/productos.html#perro-juguetes" role="menuitem">Juguetes</a>
+                <a href="../veterinaria/productos.html#perro-accesorios" role="menuitem">Accesorios</a>
+              </div>
+            </div>
+
+            <div class="dropdown-item">
+              <button class="dropdown-link" type="button">Gato <span class="arrow-right">▶</span></button>
+              <div class="subdropdown" role="menu">
+                <a href="../veterinaria/productos.html#gato-comida" role="menuitem">Comida</a>
+                <a href="../veterinaria/productos.html#gato-juguetes" role="menuitem">Juguetes</a>
+                <a href="../veterinaria/productos.html#gato-accesorios" role="menuitem">Accesorios</a>
+              </div>
+            </div>
+
+            <div class="dropdown-item">
+              <button class="dropdown-link" type="button">Aves <span class="arrow-right">▶</span></button>
+              <div class="subdropdown" role="menu">
+                <a href="../veterinaria/productos.html#aves-accesorios" role="menuitem">Accesorios</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="../index.html#contactos" class="nav-link">Contactos</a>
+        <a href="../veterinaria/veterinaria.html" class="nav-link">Veterinaria</a>
+        <a href="../VisualizacionPago/PagoNoVisible.html" class="nav-link">Pagar</a>
+        <a href="./login.html" class="nav-link nav-btn">Iniciar Sesión</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-controls="mobileMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Menú móvil -->
+    <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Navegación móvil">
+      <a href="../index.html#nosotros" class="mobile-link">Nosotros</a>
+
+      <div class="mobile-dropdown">
+        <button class="mobile-dropdown-btn" data-toggle="productos" aria-controls="productos" aria-expanded="false">
+          Productos <span class="arrow">▼</span>
+        </button>
+        <div class="mobile-dropdown-content" id="productos">
+          <a class="mobile-link" href="../veterinaria/productos.html">Ver todos los productos</a>
+
+          <div class="mobile-subdropdown">
+            <button class="mobile-subdropdown-btn" data-toggle="perro">Perro <span class="arrow">▼</span></button>
+            <div class="mobile-subdropdown-content" id="perro">
+              <a href="../veterinaria/productos.html#perro-comida">Comida</a>
+              <a href="../veterinaria/productos.html#perro-juguetes">Juguetes</a>
+              <a href="../veterinaria/productos.html#perro-accesorios">Accesorios</a>
+            </div>
+          </div>
+
+          <div class="mobile-subdropdown">
+            <button class="mobile-subdropdown-btn" data-toggle="gato">Gato <span class="arrow">▼</span></button>
+            <div class="mobile-subdropdown-content" id="gato">
+              <a href="../veterinaria/productos.html#gato-comida">Comida</a>
+              <a href="../veterinaria/productos.html#gato-juguetes">Juguetes</a>
+              <a href="../veterinaria/productos.html#gato-accesorios">Accesorios</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="../index.html#contactos" class="mobile-link">Contactos</a>
+      <a href="../veterinaria/veterinaria.html" class="mobile-link">Veterinaria</a>
+      <a href="../VisualizacionPago/PagoNoVisible.html" class="mobile-link">Pagar</a>
+      <a href="./login.html" class="mobile-link mobile-btn">Iniciar Sesión</a>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO: Login -->
+  <section class="login-section">
+    <div class="login-container">
+      <h2>Iniciar Sesión</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" placeholder="Ingrese su correo" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="Ingrese su contraseña" required>
+        </div>
+        <button type="submit" class="login-btn">Iniciar sesión</button>
+        <div class="login-links">
+          <a href="../Registro/registro.html" id="registerLink">Registrarse</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contactos" class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <div class="footer-logo">
+            <div class="logo">🐾</div>
+            <span class="brand">PetShop</span>
+          </div>
+          <p>Tu tienda de confianza para productos de calidad para mascotas.</p>
+        </div>
+
+        <div class="footer-column">
+          <h3>Contacto</h3>
+          <div class="contact-item">
+            <span class="icon">📍</span>
+            <p>Av. Principal 123, Centro Comercial Plaza Mayor, Local 45</p>
+          </div>
+          <div class="contact-item">
+            <span class="icon">✉️</span>
+            <a href="mailto:info@petshop.com">info@petshop.com</a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>Síguenos</h3>
+          <div class="social-links">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.59-1.28.73-1.689.73-4.948z"/></svg>
+            </a>
+            <a href="mailto:info@petshop.com" class="social-link" aria-label="Correo">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> PetShop. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/menu.js"></script>
+  <script src="../js/login.js"></script>
+  <script>
+    // Año dinámico del footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Submenús persistentes por click en desktop (si usas dropdown manual)
+    document.querySelectorAll('.dropdown-item .dropdown-link').forEach(btn => {
+      btn.addEventListener('click', () => btn.closest('.dropdown-item').classList.toggle('open'));
+    });
+  </script>
+</body>
+</html>

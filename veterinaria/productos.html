@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="../logo/Icono-Petshop.png" />
+  <title>Productos | MimirPetShop</title>
+  <meta name="description" content="Explora productos para perros, gatos, aves, conejos y más. Comida, juguetes y accesorios.">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/productos.css" />
+  <link rel="stylesheet" href="../css/cart.css" />
+
+  <script src="../js/admin-access.js" defer></script>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="../index.html" class="logo-link" id="logoLink">
+          <div class="logo">
+            <img src="../logo/Icono-Petshop.png" alt="Logo PetShop" id="logoImage" />
+          </div>
+          <span class="brand">MimirPetShop</span>
+        </a>
+      </div>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="../index.html#nosotros" class="nav-link">Nosotros</a>
+
+        <div class="dropdown">
+          <button class="nav-link dropdown-btn" type="button" aria-haspopup="true" aria-expanded="false">
+            Productos <span class="arrow">▼</span>
+          </button>
+
+          <div class="dropdown-content" role="menu" aria-label="Categorías de productos">
+            <div class="dropdown-item">
+              <button class="dropdown-link" type="button">Perro <span class="arrow-right">▶</span></button>
+              <div class="subdropdown" role="menu">
+                <a href="#perro-comida" role="menuitem">Comida</a>
+                <a href="#perro-juguetes" role="menuitem">Juguetes</a>
+                <a href="#perro-accesorios" role="menuitem">Accesorios</a>
+              </div>
+            </div>
+
+            <div class="dropdown-item">
+              <button class="dropdown-link" type="button">Gato <span class="arrow-right">▶</span></button>
+              <div class="subdropdown" role="menu">
+                <a href="#gato-comida" role="menuitem">Comida</a>
+                <a href="#gato-juguetes" role="menuitem">Juguetes</a>
+                <a href="#gato-accesorios" role="menuitem">Accesorios</a>
+              </div>
+            </div>
+
+            <div class="dropdown-item">
+              <button class="dropdown-link" type="button">Aves <span class="arrow-right">▶</span></button>
+              <div class="subdropdown" role="menu">
+                <a href="#aves-accesorios" role="menuitem">Accesorios</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="../index.html#contactos" class="nav-link">Contactos</a>
+        <a href="./veterinaria.html" class="nav-link">Veterinaria</a>
+        <a href="../login/login.html" class="nav-link nav-btn">Iniciar Sesión</a>
+
+        <!-- Carrito (SVG + badge) -->
+        <a href="#" class="nav-link cart-link" aria-label="Carrito" id="cartLink">
+          <span class="cart-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M7 6h14l-1.5 9H8.6L7 6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M7 6 6 3H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="9.5" cy="19.5" r="1.5" stroke="currentColor" stroke-width="1.8"/>
+              <circle cx="18" cy="19.5" r="1.5" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <span id="cartCount" class="cart-count" data-count="0">0</span>
+        </a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-controls="mobileMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Menú móvil -->
+    <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Navegación móvil">
+      <a href="../index.html#nosotros" class="mobile-link">Nosotros</a>
+
+      <div class="mobile-dropdown">
+        <button class="mobile-dropdown-btn" data-toggle="productos" aria-controls="productos" aria-expanded="false">
+          Productos <span class="arrow">▼</span>
+        </button>
+        <div class="mobile-dropdown-content" id="productos">
+          <a class="mobile-link" href="./productos.html">Ver todos los productos</a>
+
+          <div class="mobile-subdropdown">
+            <button class="mobile-subdropdown-btn" data-toggle="perro">Perro <span class="arrow">▼</span></button>
+            <div class="mobile-subdropdown-content" id="perro">
+              <a href="#perro-comida">Comida</a>
+              <a href="#perro-juguetes">Juguetes</a>
+              <a href="#perro-accesorios">Accesorios</a>
+            </div>
+          </div>
+
+          <div class="mobile-subdropdown">
+            <button class="mobile-subdropdown-btn" data-toggle="gato">Gato <span class="arrow">▼</span></button>
+            <div class="mobile-subdropdown-content" id="gato">
+              <a href="#gato-comida">Comida</a>
+              <a href="#gato-juguetes">Juguetes</a>
+              <a href="#gato-accesorios">Accesorios</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="../index.html#contactos" class="mobile-link">Contactos</a>
+      <a href="./veterinaria.html" class="mobile-link">Veterinaria</a>
+      <a href="../login/login.html" class="mobile-link mobile-btn">Iniciar Sesión</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="productos-hero">
+    <div class="hero-inner">
+      <h1>Productos</h1>
+      <p>Explora nuestras categorías y dale lo mejor a tu mascota 🐾</p>
+    </div>
+  </header>
+
+  <!-- CONTENIDO -->
+  <main class="productos-container">
+    <!-- PERRO · COMIDA -->
+    <section id="perro-comida" class="categoria">
+      <div class="cat-head">
+        <h2>Perro · Comida</h2>
+        <hr>
+      </div>
+      <div class="grid">
+        <article class="card"
+          data-sku="PER-COM-001"
+          data-name="Wellness Cachorros Razas Medianas Y Grandes"
+          data-price="10.45"
+          data-desc="Alimento premium para cachorros con proteína de alta calidad, DHA y prebióticos.">
+          <figure class="media">
+            <img src="https://agripac.com.ec/wp-content/uploads/2023/12/WELLNESS-CACHORROS.jpg" alt="Wellness cachorros">
+          </figure>
+          <div class="info">
+            <h3 class="title">Wellness Cachorros Razas Medianas Y Grandes</h3>
+            <p class="precio">$10.45 <span class="unit">/ kg</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Kilos</span>
+              <input type="number" min="0.5" step="0.5" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=PER-COM-001" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+
+        <article class="card"
+          data-sku="PER-COM-002"
+          data-name="Pro Can Adultos Razas Medianas a Grandes Original"
+          data-price="4.50"
+          data-desc="Alimento balanceado para perros adultos, vitaminas y minerales esenciales.">
+          <figure class="media">
+            <img src="https://www.supermercadosantamaria.com/documents/10180/10504/105737_G.jpg" alt="Pro Can Adultos">
+          </figure>
+          <div class="info">
+            <h3 class="title">Pro Can Adultos Razas Medianas a Grandes Original</h3>
+            <p class="precio">$4.50 <span class="unit">/ kg</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Kilos</span>
+              <input type="number" min="0.5" step="0.5" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=PER-COM-002" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+
+        <article class="card"
+          data-sku="PER-COM-003"
+          data-name="Snacks Dentales"
+          data-price="1.80"
+          data-desc="Snacks que ayudan a la salud dental de tu perro.">
+          <figure class="media">
+            <img src="https://agripac.com.ec/wp-content/uploads/2023/12/4002688-1-1200x1200-1.jpg" alt="Snacks Dentales">
+          </figure>
+          <div class="info">
+            <h3 class="title">Snacks Dentales</h3>
+            <p class="precio">$1.80 <span class="unit">/ unidad</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Unidades</span>
+              <input type="number" min="1" step="1" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=PER-COM-003" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PERRO · JUGUETES -->
+    <section id="perro-juguetes" class="categoria">
+      <div class="cat-head">
+        <h2>Perro · Juguetes</h2>
+        <hr>
+      </div>
+      <div class="grid">
+        <article class="card"
+          data-sku="PER-JUG-001"
+          data-name="Pelota Resistente L"
+          data-price="4.90"
+          data-desc="Pelota de alta resistencia, ideal para juegos al aire libre.">
+          <figure class="media">
+            <img src="https://www.nonstopdogwear.com/cdn/shop/files/ball_feature_1.jpg?v=1753448445&width=1280" alt="Pelota Resistente L">
+          </figure>
+          <div class="info">
+            <h3 class="title">Pelota Resistente L</h3>
+            <p class="precio">$4.90 <span class="unit">/ unidad</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Unidades</span>
+              <input type="number" min="1" step="1" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=PER-JUG-001" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+
+        <article class="card"
+          data-sku="PER-JUG-002"
+          data-name="Soga Trenzada"
+          data-price="3.50"
+          data-desc="Soga trenzada para tirar y morder, entretención asegurada.">
+          <figure class="media">
+            <img src="https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/c403e58e959f5edaa829b58a60751c48.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp" alt="Soga trenzada">
+          </figure>
+          <div class="info">
+            <h3 class="title">Soga Trenzada</h3>
+            <p class="precio">$3.50 <span class="unit">/ unidad</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Unidades</span>
+              <input type="number" min="1" step="1" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=PER-JUG-002" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- GATO · COMIDA -->
+    <section id="gato-comida" class="categoria">
+      <div class="cat-head">
+        <h2>Gato · Comida</h2>
+        <hr>
+      </div>
+      <div class="grid">
+        <article class="card"
+          data-sku="GAT-COM-001"
+          data-name="Michu Sabor de pollo"
+          data-price="7.00"
+          data-desc="Alimento seco completo para gatos, sabor pollo. Omega 3 y 6.">
+          <figure class="media">
+            <img src="https://www.supermercadosantamaria.com/documents/10180/10504/59028_M.jpg" alt="Michu sabor pollo">
+          </figure>
+          <div class="info">
+            <h3 class="title">Michu Sabor de pollo</h3>
+            <p class="precio">$7.00 <span class="unit">/ kg</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Kilos</span>
+              <input type="number" min="0.5" step="0.5" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=GAT-COM-001" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+
+        <article class="card"
+          data-sku="GAT-COM-002"
+          data-name="Nutrapro Lata Gatos Pollo/Hígado"
+          data-price="1.80"
+          data-desc="Lata húmeda de pollo/hígado para gatos. Alta palatabilidad.">
+          <figure class="media">
+            <img src="https://agripac.com.ec/wp-content/uploads/2023/12/npGatos_PolloHigado.jpg" alt="Nutrapro lata gato">
+          </figure>
+          <div class="info">
+            <h3 class="title">Nutrapro Lata Gatos Pollo/Hígado</h3>
+            <p class="precio">$1.80 <span class="unit">/ unidad</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Unidades</span>
+              <input type="number" min="1" step="1" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=GAT-COM-002" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- AVES · ACCESORIOS -->
+    <section id="aves-accesorios" class="categoria">
+      <div class="cat-head">
+        <h2>Aves · Accesorios</h2>
+        <hr>
+      </div>
+      <div class="grid">
+        <article class="card"
+          data-sku="AVE-ACC-001"
+          data-name="Bebedero Antigoteo"
+          data-price="3.20"
+          data-desc="Bebedero antigoteo para jaulas de aves pequeñas.">
+          <figure class="media">
+            <img src="../animales/pajaro-comiendo.jpg" alt="Bebedero para aves">
+          </figure>
+          <div class="info">
+            <h3 class="title">Bebedero Antigoteo</h3>
+            <p class="precio">$3.20 <span class="unit">/ unidad</span></p>
+          </div>
+          <div class="acciones">
+            <label class="cantidad">
+              <span>Unidades</span>
+              <input type="number" min="1" step="1" value="1" class="cantidad-input">
+            </label>
+            <a href="./producto.html?sku=AVE-ACC-001" class="btn btn-ghost">Ver detalle</a>
+            <button class="btn btn-primario add-to-cart">Agregar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- MINI CARRITO / MODALES -->
+  <div id="miniCart" class="mini-cart" aria-live="polite" aria-hidden="true">
+    <div class="mini-cart-header">
+      <h3>Tu carrito 🐾</h3>
+      <button id="closeMiniCart" class="close-btn" aria-label="Cerrar mini carrito">×</button>
+    </div>
+    <div class="mini-cart-body">
+      <p class="empty">Tu carrito está vacío.</p>
+      <ul id="cartItems"></ul>
+    </div>
+    <div class="mini-cart-footer">
+      <p>Total: $<span id="cartTotal">0.00</span></p>
+      <button id="payBtn" class="btn btn-primario pagar-btn" type="button">Pagar</button>
+    </div>
+  </div>
+
+  <div id="detailOverlay" class="overlay" aria-hidden="true"></div>
+  <div id="detailModal" class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" aria-hidden="true">
+    <div class="detail-header">
+      <h3 id="detailTitle">Detalle del producto</h3>
+      <button id="closeDetail" class="close-btn" aria-label="Cerrar">×</button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-media">
+        <img id="detailImg" src="" alt="Producto" />
+      </div>
+      <div class="detail-info">
+        <h4 id="detailName">Nombre del producto</h4>
+        <p id="detailDesc" class="detail-desc">Descripción corta del producto…</p>
+        <p class="detail-price">Precio: $<span id="detailPrice">0.00</span> <span id="detailUnit">/ kg</span></p>
+        <div class="detail-actions">
+          <label class="cantidad">
+            <span id="detailQtyLabel">Kilos</span>
+            <input type="number" id="detailQty" min="0.5" step="0.5" value="1" />
+          </label>
+          <button id="detailAdd" class="btn btn-primario">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="checkoutOverlay" class="overlay" aria-hidden="true"></div>
+  <div id="checkoutModal" class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="chkTitle" aria-hidden="true">
+    <div class="checkout-header">
+      <h3 id="chkTitle">Finalizar compra</h3>
+      <button id="closeCheckout" class="close-btn" aria-label="Cerrar">×</button>
+    </div>
+    <div class="checkout-body">
+      <div class="resumen">
+        <h4>Resumen</h4>
+        <ul id="checkoutItems"></ul>
+        <p class="total">Total a pagar: $<span id="checkoutTotal">0.00</span></p>
+      </div>
+
+      <form id="checkoutForm" class="form">
+        <h4>Datos</h4>
+        <label>Nombre completo
+          <input type="text" id="chkName" required>
+        </label>
+        <label>Correo
+          <input type="email" id="chkEmail" required>
+        </label>
+        <label>Dirección
+          <input type="text" id="chkAddress" required>
+        </label>
+
+        <h4>Pago</h4>
+        <label>Método
+          <select id="chkMethod" required>
+            <option value="tarjeta">Tarjeta</option>
+            <option value="transferencia">Transferencia</option>
+            <option value="contraentrega">Contraentrega</option>
+          </select>
+        </label>
+
+        <div id="cardFields">
+          <label>Número de tarjeta
+            <input type="text" id="chkCard" inputmode="numeric" maxlength="19" placeholder="XXXX XXXX XXXX XXXX">
+          </label>
+          <div class="grid-2">
+            <label>Expiración (MM/AA)
+              <input type="text" id="chkExp" inputmode="numeric" maxlength="5" placeholder="MM/AA">
+            </label>
+            <label>CVV
+              <input type="password" id="chkCvv" inputmode="numeric" maxlength="4" placeholder="*">
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primario full">Confirmar pago</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="contactos" class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <div class="footer-logo">
+            <div class="logo">🐾</div>
+            <span class="brand">PetShop</span>
+          </div>
+          <p>Tu tienda de confianza para productos de calidad para mascotas.</p>
+        </div>
+
+        <div class="footer-column">
+          <h3>Contacto</h3>
+          <div class="contact-item"><span class="icon">📍</span><p>Av. Principal 123, Centro Comercial Plaza Mayor, Local 45</p></div>
+          <div class="contact-item"><span class="icon">✉️</span><a href="mailto:info@petshop.com">info@petshop.com</a></div>
+        </div>
+
+        <div class="footer-column">
+          <h3>Síguenos</h3>
+          <div class="social-links">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.59-1.28.73-1.689.73-4.948z"/></svg>
+            </a>
+            <a href="mailto:info@petshop.com" class="social-link" aria-label="Correo">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> PetShop. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/menu.js"></script>
+  <script src="../js/cart.js"></script>
+  <script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    document.querySelectorAll('.dropdown-item .dropdown-link').forEach(btn => {
+      btn.addEventListener('click', () => btn.closest('.dropdown-item').classList.toggle('open'));
+    });
+  </script>
+</body>
+</html>
