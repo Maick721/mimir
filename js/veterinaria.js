@@ -17,3 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   elementos.forEach((el) => observador.observe(el));
 });
+
+// Animación al hacer scroll (para la sección "Cómo llegar")
+document.addEventListener("scroll", () => {
+  const seccion = document.querySelector(".como-llegar-section");
+  const mapa = document.querySelector(".mapa-container");
+
+  if (seccion) {
+    const rect = seccion.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 100) {
+      seccion.classList.add("visible");
+      mapa.classList.add("visible");
+    }
+  }
+});
