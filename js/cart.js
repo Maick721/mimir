@@ -1,389 +1,232 @@
-/* ===========================
-   MimirPetShop · cart.js
-   =========================== */
+/* ==============================
+   MimirPetShop · CART (mini cart)
+   Persistencia: localStorage ("mimir_cart")
+   Funciona con:
+   - Botones .add-to-cart dentro de .card con data-sku, data-name, data-price
+   - #cartCount, #cartLink, #miniCart, #closeMiniCart, #cartItems, #cartTotal, #payBtn
+   ============================== */
 
 (() => {
-  const $ = (s, sc = document) => sc.querySelector(s);
-  const $$ = (s, sc = document) => Array.from(sc.querySelectorAll(s));
+  const STORAGE_KEY = "mimir_cart";
+  const PAY_URL = "../VisualizacionPago/PagoNoVisible.html"; // ajusta si tu ruta es distinta
 
-  // ----- Elementos del DOM (coinciden con tu HTML) -----
-  const cartLink        = $("#cartLink");
-  const cartCount       = $("#cartCount");
+  // UI refs
+  const cartCountEl = document.getElementById("cartCount");
+  const cartLinkEl  = document.getElementById("cartLink");
+  const miniCartEl  = document.getElementById("miniCart");
+  const closeMiniEl = document.getElementById("closeMiniCart");
+  const cartItemsEl = document.getElementById("cartItems");
+  const cartTotalEl = document.getElementById("cartTotal");
+  const payBtnEl    = document.getElementById("payBtn");
 
-  const miniCart        = $("#miniCart");
-  const closeMiniCart   = $("#closeMiniCart");
-  const cartItemsUl     = $("#cartItems");
-  const cartTotalEl     = $("#cartTotal");
-  const payBtn          = $("#payBtn");
+  // Estado
+  let cart = [];
 
-  const detailOverlay   = $("#detailOverlay");
-  const detailModal     = $("#detailModal");
-  const closeDetail     = $("#closeDetail");
-  const detailImg       = $("#detailImg");
-  const detailName      = $("#detailName");
-  const detailDesc      = $("#detailDesc");
-  const detailPrice     = $("#detailPrice");
-  const detailUnit      = $("#detailUnit");
-  const detailQty       = $("#detailQty");
-  const detailQtyLabel  = $("#detailQtyLabel");
-  const detailAdd       = $("#detailAdd");
+  /* ==============================
+     Utils
+     ============================== */
+  const fmt = (n) => (Math.round(n * 100) / 100).toFixed(2);
 
-  const checkoutOverlay = $("#checkoutOverlay");
-  const checkoutModal   = $("#checkoutModal");
-  const closeCheckout   = $("#closeCheckout");
-  const checkoutItemsUl = $("#checkoutItems");
-  const checkoutTotalEl = $("#checkoutTotal");
-  const checkoutForm    = $("#checkoutForm");
-  const chkMethod       = $("#chkMethod");
-  const cardFields      = $("#cardFields");
+  const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
 
-  const LS_KEY = "mimir_cart_v1";
-
-  // ----- Estado -----
-  const state = {
-    items: loadState(),
+  const load = () => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      cart = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(cart)) cart = [];
+    } catch {
+      cart = [];
+    }
   };
 
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (!raw) return [];
-      const data = JSON.parse(raw);
-      if (!Array.isArray(data)) return [];
-      return data;
-    } catch {
-      return [];
-    }
-  }
+  const countItems = () => cart.reduce((acc, it) => acc + it.qty, 0);
 
-  function saveState() {
-    localStorage.setItem(LS_KEY, JSON.stringify(state.items));
-  }
+  const calcTotal = () =>
+    cart.reduce((acc, it) => acc + it.price * it.qty, 0);
 
-  // ----- Helpers -----
-  function format(n) {
-    const v = Number(n || 0);
-    return v.toFixed(2);
-  }
+  const openMini = () => miniCartEl?.classList.add("show");
+  const closeMini = () => miniCartEl?.classList.remove("show");
+  const toggleMini = () => miniCartEl?.classList.toggle("show");
 
-  function getQtyFromCard(card) {
-    const input = card.querySelector(".cantidad-input");
-    const val = parseFloat((input && input.value) || "1");
-    return isNaN(val) || val <= 0 ? 1 : val;
-  }
+  /* ==============================
+     Render
+     ============================== */
+  const updateBadge = () => {
+    const totalQty = countItems();
+    if (cartCountEl) cartCountEl.textContent = String(totalQty);
+  };
 
-  function findItem(sku) {
-    return state.items.find(i => i.sku === sku);
-  }
+  const renderCart = () => {
+    if (!cartItemsEl || !cartTotalEl) return;
 
-  function sumCount() {
-    return state.items.reduce((acc, it) => acc + Number(it.qty || 0), 0);
-  }
+    cartItemsEl.innerHTML = "";
 
-  function sumTotal() {
-    return state.items.reduce((acc, it) => acc + it.price * it.qty, 0);
-  }
-
-  function updateBadge() {
-    const count = sumCount();
-    cartCount.textContent = count;
-    cartCount.dataset.count = String(count);
-  }
-
-  // ----- CRUD del carrito -----
-  function addItem({ sku, name, price, qty, img, unit }) {
-    if (!sku) return;
-    const existing = findItem(sku);
-    if (existing) {
-      existing.qty += qty;
-      existing.img = existing.img || img;
-      existing.unit = existing.unit || unit;
-      existing.name = existing.name || name;
-      existing.price = Number(price);
-    } else {
-      state.items.push({
-        sku,
-        name,
-        price: Number(price),
-        qty: Number(qty),
-        img: img || "",
-        unit: unit || "",
-      });
-    }
-    saveState();
-    renderCart();
-  }
-
-  function updateQty(sku, qty) {
-    const it = findItem(sku);
-    if (!it) return;
-    it.qty = Math.max(1, Number(qty) || 1);
-    saveState();
-    renderCart();
-  }
-
-  function removeItem(sku) {
-    state.items = state.items.filter(i => i.sku !== sku);
-    saveState();
-    renderCart();
-  }
-
-  function clearCart() {
-    state.items = [];
-    saveState();
-    renderCart();
-  }
-
-  // ----- Render mini-carrito -----
-  function renderCart() {
-    cartItemsUl.innerHTML = "";
-    if (!state.items.length) {
-      $(".empty", miniCart).style.display = "block";
+    if (cart.length === 0) {
+      miniCartEl?.querySelector(".empty")?.classList.remove("hidden");
       cartTotalEl.textContent = "0.00";
-    } else {
-      $(".empty", miniCart).style.display = "none";
-      const frag = document.createDocumentFragment();
-      state.items.forEach(it => {
-        const li = document.createElement("li");
-        li.className = "cart-row";
-        li.innerHTML = `
-          <img src="${it.img || ""}" alt="${it.name || "producto"}">
-          <div class="cart-row-info">
-            <div><strong>${it.name}</strong></div>
-            <div class="muted">${it.sku} · $${format(it.price)} ${it.unit ? `/${it.unit}` : ""}</div>
-            <div class="muted">Subtotal: $${format(it.price * it.qty)}</div>
-          </div>
-          <div class="cart-row-actions">
-            <button class="qty-dec" data-sku="${it.sku}" title="Restar">-</button>
-            <button class="qty-show" disabled>${format(it.qty)}</button>
-            <button class="qty-inc" data-sku="${it.sku}" title="Sumar">+</button>
-            <button class="rm" data-sku="${it.sku}" title="Eliminar">✕</button>
-          </div>
-        `;
-        frag.appendChild(li);
-      });
-      cartItemsUl.appendChild(frag);
-      cartTotalEl.textContent = format(sumTotal());
+      return;
     }
-    updateBadge();
-  }
 
-  // ----- Mini-carrito UI -----
-  function openMiniCart() {
-    miniCart.classList.add("show");
-    miniCart.setAttribute("aria-hidden", "false");
-  }
-  function closeMiniCartUI() {
-    miniCart.classList.remove("show");
-    miniCart.setAttribute("aria-hidden", "true");
-  }
+    miniCartEl?.querySelector(".empty")?.classList.add("hidden");
 
-  // ----- Detalle UI -----
-  function openDetail() {
-    detailOverlay.classList.add("show");
-    detailModal.classList.add("show");
-    detailOverlay.setAttribute("aria-hidden", "false");
-    detailModal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("no-scroll");
-  }
-  function closeDetailUI() {
-    detailOverlay.classList.remove("show");
-    detailModal.classList.remove("show");
-    detailOverlay.setAttribute("aria-hidden", "true");
-    detailModal.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("no-scroll");
-  }
-
-  // ----- Checkout UI -----
-  function renderCheckout() {
-    checkoutItemsUl.innerHTML = "";
-    const frag = document.createDocumentFragment();
-    state.items.forEach(it => {
+    cart.forEach((item) => {
       const li = document.createElement("li");
       li.className = "cart-row";
+
       li.innerHTML = `
-        <img src="${it.img || ""}" alt="${it.name || "producto"}">
-        <div class="cart-row-info">
-          <div><strong>${it.name}</strong></div>
-          <div class="muted">${it.sku} · $${format(it.price)} ${it.unit ? `/${it.unit}` : ""}</div>
-          <div class="muted">Cantidad: ${format(it.qty)} · Subtotal: $${format(it.price * it.qty)}</div>
+        <div class="row-left">
+          <img class="thumb" src="${item.img || ""}" alt="${item.name}" />
+          <div class="meta">
+            <p class="name">${item.name}</p>
+            <p class="sku">SKU: ${item.sku}</p>
+          </div>
+        </div>
+
+        <div class="row-right">
+          <div class="qty">
+            <button class="qty-btn dec" aria-label="Disminuir cantidad">−</button>
+            <input class="qty-input" type="number" min="1" step="1" value="${item.qty}" />
+            <button class="qty-btn inc" aria-label="Aumentar cantidad">+</button>
+          </div>
+          <div class="price">$${fmt(item.price * item.qty)}</div>
+          <button class="remove" title="Eliminar">✕</button>
         </div>
       `;
-      frag.appendChild(li);
+
+      const decBtn = li.querySelector(".dec");
+      const incBtn = li.querySelector(".inc");
+      const qtyInp = li.querySelector(".qty-input");
+      const rmBtn  = li.querySelector(".remove");
+
+      decBtn.addEventListener("click", () => updateQty(item.sku, item.qty - 1));
+      incBtn.addEventListener("click", () => updateQty(item.sku, item.qty + 1));
+      qtyInp.addEventListener("change", (e) => {
+        const val = Math.max(1, parseInt(e.target.value || "1", 10));
+        updateQty(item.sku, val);
+      });
+      rmBtn.addEventListener("click", () => removeItem(item.sku));
+
+      cartItemsEl.appendChild(li);
     });
-    checkoutItemsUl.appendChild(frag);
-    checkoutTotalEl.textContent = format(sumTotal());
-  }
 
-  function openCheckout() {
-    if (!state.items.length) {
-      openMiniCart();
-      return;
+    cartTotalEl.textContent = fmt(calcTotal());
+  };
+
+  /* ==============================
+     Operaciones del carrito
+     ============================== */
+  const addItem = (payload) => {
+    const { sku, name, price, img } = payload || {};
+    if (!sku || !name || isNaN(price)) return;
+
+    const found = cart.find((it) => it.sku === sku);
+    if (found) {
+      found.qty += 1;
+    } else {
+      cart.push({ sku, name, price: Number(price), qty: 1, img: img || "" });
     }
-    renderCheckout();
-    checkoutOverlay.classList.add("show");
-    checkoutModal.classList.add("show");
-    checkoutOverlay.setAttribute("aria-hidden", "false");
-    checkoutModal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("no-scroll");
-  }
-  function closeCheckoutUI() {
-    checkoutOverlay.classList.remove("show");
-    checkoutModal.classList.remove("show");
-    checkoutOverlay.setAttribute("aria-hidden", "true");
-    checkoutModal.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("no-scroll");
-  }
+    save();
+    updateBadge();
+    renderCart();
+    openMini();
+  };
 
-  // Mostrar/ocultar campos de tarjeta
-  function toggleCardFields() {
-    const m = chkMethod.value;
-    cardFields.style.display = m === "tarjeta" ? "block" : "none";
-  }
+  const updateQty = (sku, qty) => {
+    const it = cart.find((x) => x.sku === sku);
+    if (!it) return;
+    it.qty = Math.max(1, qty | 0);
+    save();
+    updateBadge();
+    renderCart();
+  };
 
-  // ----- Listeners globales -----
-  document.addEventListener("click", (e) => {
-    // Agregar al carrito
-    const addBtn = e.target.closest(".add-to-cart");
-    if (addBtn) {
+  const removeItem = (sku) => {
+    cart = cart.filter((x) => x.sku !== sku);
+    save();
+    updateBadge();
+    renderCart();
+    if (cart.length === 0) {
+      miniCartEl?.querySelector(".empty")?.classList.remove("hidden");
+    }
+  };
+
+  /* ==============================
+     Captura de clicks "Agregar"
+     ============================== */
+  const getCardPayload = (btn) => {
+    const card = btn.closest(".card");
+    if (!card) return null;
+
+    // SKU y nombre preferentemente desde data-*
+    let sku  = card.getAttribute("data-sku") || "";
+    let name = card.getAttribute("data-name") || card.querySelector("h3")?.textContent?.trim() || "Producto";
+
+    // Precio desde data-price; si falta, intenta parsear del <p>
+    let price = parseFloat(card.getAttribute("data-price") || "NaN");
+    if (isNaN(price)) {
+      const txt = card.querySelector("p")?.textContent || "";
+      const match = txt.replace(",", ".").match(/(\d+(\.\d+)?)/);
+      price = match ? parseFloat(match[1]) : NaN;
+    }
+    if (!sku) {
+      // última defensa: SKU temporal (no recomendado en producción)
+      sku = `SKU-${Math.random().toString(36).slice(2, 9).toUpperCase()}`;
+    }
+    const img = card.querySelector("img")?.getAttribute("src") || "";
+    return { sku, name, price, img };
+  };
+
+  const bindAddToCart = () => {
+    document.querySelectorAll(".add-to-cart").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const payload = getCardPayload(btn);
+        if (!payload || !payload.sku || isNaN(payload.price)) {
+          console.warn("Tarjeta sin datos válidos para el carrito:", payload);
+          return;
+        }
+        addItem(payload);
+      });
+    });
+  };
+
+  /* ==============================
+     Navegación / Acciones globales
+     ============================== */
+  const bindGlobal = () => {
+    cartLinkEl?.addEventListener("click", (e) => {
       e.preventDefault();
-      const card = addBtn.closest(".card");
-      if (!card) return;
+      toggleMini();
+    });
 
-      const sku   = card.dataset.sku;
-      const name  = card.dataset.name || $(".title", card)?.textContent?.trim() || "Producto";
-      const price = parseFloat(card.dataset.price || "0");
-      const qty   = getQtyFromCard(card);
-      const img   = $("figure img", card)?.src || "";
-      const unit  = $(".precio .unit", card)?.textContent?.replace("/", "")?.trim() || "";
+    closeMiniEl?.addEventListener("click", closeMini);
 
-      if (!sku || isNaN(price) || price <= 0) {
-        console.warn("Datos de producto inválidos:", { sku, price });
-        return;
-      }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMini();
+    });
 
-      addItem({ sku, name, price, qty, img, unit });
-      openMiniCart();
-      return;
-    }
-
-    // Ver detalle (si usas el modal de detalle desde el listado)
-    const viewLink = e.target.closest(".btn-ghost[href^='./producto.html']");
-    if (viewLink) {
-      // Si quieres ir a la página, elimina este bloque.
+    payBtnEl?.addEventListener("click", (e) => {
       e.preventDefault();
-      const card = viewLink.closest(".card");
-      if (!card) return;
+      if (cart.length === 0) return;
+      // Redirección simple a tu flujo de pago (ajusta PAY_URL según tu proyecto)
+      window.location.href = PAY_URL;
+    });
+  };
 
-      const name  = card.dataset.name || $(".title", card)?.textContent?.trim() || "Producto";
-      const desc  = card.dataset.desc || "";
-      const price = parseFloat(card.dataset.price || "0");
-      const img   = $("figure img", card)?.src || "";
-      const unit  = $(".precio .unit", card)?.textContent?.trim() || "/ kg";
-      const qty   = getQtyFromCard(card);
+  /* ==============================
+     Init
+     ============================== */
+  const init = () => {
+    load();
+    updateBadge();
+    renderCart();
+    bindAddToCart();
+    bindGlobal();
 
-      detailImg.src = img || "";
-      detailName.textContent = name;
-      detailDesc.textContent = desc;
-      detailPrice.textContent = format(price);
-      detailUnit.textContent = unit.startsWith("/") ? unit : ` ${unit ? "/ " + unit : ""}`;
-      detailQty.value = qty;
-      detailQtyLabel.textContent = unit.includes("unidad") ? "Unidades" : "Kilos";
+    // Re-enlaza si se agregan tarjetas dinámicamente
+    const observer = new MutationObserver(() => bindAddToCart());
+    observer.observe(document.body, { childList: true, subtree: true });
+  };
 
-      // Guarda datos actuales en dataset del botón "Agregar" del modal
-      detailAdd.dataset.sku   = card.dataset.sku;
-      detailAdd.dataset.name  = name;
-      detailAdd.dataset.price = String(price);
-      detailAdd.dataset.img   = img;
-      detailAdd.dataset.unit  = unit.replace("/", "").trim();
-
-      openDetail();
-      return;
-    }
-
-    // Botones mini-carrito (sumar/restar/eliminar)
-    if (e.target.matches(".qty-inc")) {
-      const sku = e.target.dataset.sku;
-      const it = findItem(sku);
-      if (it) updateQty(sku, it.qty + 1);
-      return;
-    }
-    if (e.target.matches(".qty-dec")) {
-      const sku = e.target.dataset.sku;
-      const it = findItem(sku);
-      if (it) updateQty(sku, Math.max(1, it.qty - 1));
-      return;
-    }
-    if (e.target.matches(".rm")) {
-      const sku = e.target.dataset.sku;
-      removeItem(sku);
-      return;
-    }
-  });
-
-  // Clicks de apertura/cierre
-  cartLink?.addEventListener("click", (e) => {
-    e.preventDefault();
-    openMiniCart();
-  });
-  closeMiniCart?.addEventListener("click", closeMiniCartUI);
-
-  // Detalle
-  closeDetail?.addEventListener("click", closeDetailUI);
-  detailOverlay?.addEventListener("click", (e) => {
-    if (e.target === detailOverlay) closeDetailUI();
-  });
-  detailAdd?.addEventListener("click", () => {
-    const sku   = detailAdd.dataset.sku;
-    const name  = detailAdd.dataset.name;
-    const price = parseFloat(detailAdd.dataset.price || "0");
-    const img   = detailAdd.dataset.img || "";
-    const unit  = detailAdd.dataset.unit || "";
-    const qty   = parseFloat(detailQty.value || "1") || 1;
-
-    if (!sku || isNaN(price) || price <= 0) return;
-    addItem({ sku, name, price, qty, img, unit });
-    closeDetailUI();
-    openMiniCart();
-  });
-
-  // Checkout
-  payBtn?.addEventListener("click", openCheckout);
-  closeCheckout?.addEventListener("click", closeCheckoutUI);
-  checkoutOverlay?.addEventListener("click", (e) => {
-    if (e.target === checkoutOverlay) closeCheckoutUI();
-  });
-  chkMethod?.addEventListener("change", toggleCardFields);
-  toggleCardFields();
-
-  checkoutForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (!state.items.length) return;
-
-    // Validaciones simples para "tarjeta"
-    if (chkMethod.value === "tarjeta") {
-      const card = $("#chkCard").value.trim();
-      const exp  = $("#chkExp").value.trim();
-      const cvv  = $("#chkCvv").value.trim();
-      if (card.length < 12 || !/^\d[\d\s]*$/.test(card)) {
-        alert("Número de tarjeta inválido.");
-        return;
-      }
-      if (!/^\d{2}\/\d{2}$/.test(exp)) {
-        alert("Fecha de expiración inválida (usa MM/AA).");
-        return;
-      }
-      if (!/^\d{3,4}$/.test(cvv)) {
-        alert("CVV inválido.");
-        return;
-      }
-    }
-
-    alert("¡Pago procesado con éxito! ✨");
-    clearCart();
-    closeCheckoutUI();
-  });
-
-  // Iniciar UI
-  renderCart();
+  document.addEventListener("DOMContentLoaded", init);
 })();
