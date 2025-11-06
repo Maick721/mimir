@@ -287,3 +287,68 @@
   border-top: 1px solid var(--border);
   padding-top: 15px;
 }
+
+/* Selector de cantidad en tarjetas */
+.qty-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 6px 0 8px;
+}
+
+.qty-select .qty-btn {
+  background: #ffb703;
+  border: none;
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.qty-select .qty-input {
+  width: 54px;
+  text-align: center;
+  padding: 6px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* Selector de cantidad en tarjetas */
+.qty-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 6px 0 8px;
+}
+
+.qty-select .qty-btn {
+  background: #ffb703;
+  border: none;
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.qty-select .qty-input {
+  width: 60px;
+  text-align: center;
+  padding: 6px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* La etiqueta de unidad que aparece a la derecha del input */
+.qty-select .unit {
+  min-width: 78px;           /* deja espacio para "unidades" */
+  text-align: left;
+  font-size: 14px;
+  opacity: .75;
+  user-select: none;
+}
