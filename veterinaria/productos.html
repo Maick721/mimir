@@ -351,6 +351,60 @@
       </div>
     </div>
   </footer>
+  <!-- MODAL DE PAGO -->
+<div id="modalPago" class="modal-pago-overlay hidden" aria-hidden="true">
+  <div class="modal-pago" role="dialog" aria-modal="true">
+    <h2>Confirmar Pedido 🐾</h2>
+    <p>Total: $<strong id="modalTotal"></strong></p>
+
+    <div class="pay-methods">
+      <label><input type="radio" name="paymethod" value="card" checked> Tarjeta</label>
+      <label><input type="radio" name="paymethod" value="payphone"> PayPhone</label>
+    </div>
+
+    <form id="cardForm" class="card-form">
+      <label>Número de tarjeta</label>
+      <input id="ccNumber" placeholder="4111 1111 1111 1111" maxlength="19">
+
+      <label>Vencimiento (MM/AA)</label>
+      <input id="ccExp" placeholder="12/28" maxlength="5">
+
+      <label>CVV</label>
+      <input id="ccCvv" placeholder="123" maxlength="4">
+
+      <label>Nombre del titular</label>
+      <input id="ccName" placeholder="Juan Pérez">
+    </form>
+
+    <div id="payphoneBox" class="payphone-box hidden">
+      <p>Escanea con PayPhone para continuar</p>
+      <div class="qr"></div>
+    </div>
+
+    <p id="pagoError" class="pago-error hidden"></p>
+
+    <div class="actions">
+      <button id="btnConfirmarPago" class="btn-confirmar">Confirmar pago</button>
+      <button id="btnCancelarPago" class="btn-cancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANIMACIÓN DE ÉXITO -->
+<div id="modalExito" class="exito-overlay hidden">
+  <div class="exito-box">
+    <div class="checkmark">
+      <div class="checkmark__circle"></div>
+      <div class="checkmark__stem"></div>
+      <div class="checkmark__kick"></div>
+    </div>
+    <h2>¡Pago realizado con éxito!</h2>
+    <p>Gracias por tu compra 💙</p>
+  </div>
+</div>
+
+<script src="../js/payment.js"></script>
+
 
   <!-- Scripts -->
   <script src="../js/menu.js"></script>
@@ -358,5 +412,6 @@
   <script>
     document.getElementById('currentYear').textContent = new Date().getFullYear();
   </script>
+  
 </body>
 </html>

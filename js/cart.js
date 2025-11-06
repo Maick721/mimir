@@ -8,7 +8,6 @@
 
 (() => {
   const STORAGE_KEY = "mimir_cart";
-  const PAY_URL = "../VisualizacionPago/PagoNoVisible.html"; // ajusta si tu ruta es distinta
 
   // UI refs
   const cartCountEl = document.getElementById("cartCount");
@@ -40,12 +39,10 @@
   };
 
   const countItems = () => cart.reduce((acc, it) => acc + it.qty, 0);
+  const calcTotal  = () => cart.reduce((acc, it) => acc + it.price * it.qty, 0);
 
-  const calcTotal = () =>
-    cart.reduce((acc, it) => acc + it.price * it.qty, 0);
-
-  const openMini = () => miniCartEl?.classList.add("show");
-  const closeMini = () => miniCartEl?.classList.remove("show");
+  const openMini   = () => miniCartEl?.classList.add("show");
+  const closeMini  = () => miniCartEl?.classList.remove("show");
   const toggleMini = () => miniCartEl?.classList.toggle("show");
 
   /* ==============================
@@ -93,6 +90,7 @@
         </div>
       `;
 
+      // Eventos por item
       const decBtn = li.querySelector(".dec");
       const incBtn = li.querySelector(".inc");
       const qtyInp = li.querySelector(".qty-input");
@@ -157,22 +155,11 @@
     const card = btn.closest(".card");
     if (!card) return null;
 
-    // SKU y nombre preferentemente desde data-*
-    let sku  = card.getAttribute("data-sku") || "";
-    let name = card.getAttribute("data-name") || card.querySelector("h3")?.textContent?.trim() || "Producto";
+    const sku   = card.getAttribute("data-sku") || "";
+    const name  = card.getAttribute("data-name") || card.querySelector("h3")?.textContent?.trim() || "";
+    const price = parseFloat(card.getAttribute("data-price") || "0");
+    const img   = card.querySelector("img")?.getAttribute("src") || "";
 
-    // Precio desde data-price; si falta, intenta parsear del <p>
-    let price = parseFloat(card.getAttribute("data-price") || "NaN");
-    if (isNaN(price)) {
-      const txt = card.querySelector("p")?.textContent || "";
-      const match = txt.replace(",", ".").match(/(\d+(\.\d+)?)/);
-      price = match ? parseFloat(match[1]) : NaN;
-    }
-    if (!sku) {
-      // última defensa: SKU temporal (no recomendado en producción)
-      sku = `SKU-${Math.random().toString(36).slice(2, 9).toUpperCase()}`;
-    }
-    const img = card.querySelector("img")?.getAttribute("src") || "";
     return { sku, name, price, img };
   };
 
@@ -181,8 +168,8 @@
       btn.addEventListener("click", (e) => {
         e.preventDefault();
         const payload = getCardPayload(btn);
-        if (!payload || !payload.sku || isNaN(payload.price)) {
-          console.warn("Tarjeta sin datos válidos para el carrito:", payload);
+        if (!payload || !payload.sku) {
+          console.warn("No se encontraron datos válidos en la tarjeta para agregar al carrito.");
           return;
         }
         addItem(payload);
@@ -194,6 +181,7 @@
      Navegación / Acciones globales
      ============================== */
   const bindGlobal = () => {
+    // Abrir/cerrar mini-cart
     cartLinkEl?.addEventListener("click", (e) => {
       e.preventDefault();
       toggleMini();
@@ -201,15 +189,20 @@
 
     closeMiniEl?.addEventListener("click", closeMini);
 
+    // ESC cierra mini-cart
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeMini();
     });
 
+    // Pagar → abrir modal (payment.js gestiona login y éxito)
     payBtnEl?.addEventListener("click", (e) => {
       e.preventDefault();
-      if (cart.length === 0) return;
-      // Redirección simple a tu flujo de pago (ajusta PAY_URL según tu proyecto)
-      window.location.href = PAY_URL;
+      const hasItems = cart.length > 0;
+      if (!hasItems) return openMini();
+
+      if (typeof window.openPaymentModal === "function") {
+        window.openPaymentModal();
+      }
     });
   };
 
@@ -223,7 +216,7 @@
     bindAddToCart();
     bindGlobal();
 
-    // Re-enlaza si se agregan tarjetas dinámicamente
+    // Observa DOM por si agregas tarjetas dinámicamente (opcional)
     const observer = new MutationObserver(() => bindAddToCart());
     observer.observe(document.body, { childList: true, subtree: true });
   };
