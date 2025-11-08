@@ -229,8 +229,9 @@
 .footer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
+  gap: 40px;
   margin-bottom: 30px;
+  align-items: start;
 }
 
 .footer-logo {
@@ -244,8 +245,9 @@
 
 .footer-column h3 {
   color: var(--primary-dark);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .footer-column p,
@@ -253,40 +255,41 @@
   color: var(--muted);
   font-size: 0.95rem;
   text-decoration: none;
+  line-height: 1.6;
 }
 
 .footer-column a:hover {
   color: var(--primary);
 }
 
+/* Redes sociales sin círculos */
 .social-links {
   display: flex;
-  gap: 12px;
+  gap: 16px;
+  margin-top: 10px;
 }
 
 .social-link {
-  width: 34px;
-  height: 34px;
-  background: var(--primary);
-  color: #000000;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  transition: transform 0.2s ease, background 0.2s ease;
+  color: var(--primary-dark);
+  font-size: 1.4rem;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .social-link:hover {
-  background: var(--primary-dark);
+  color: var(--primary);
   transform: translateY(-2px);
 }
 
+/* Línea inferior */
 .footer-bottom {
   text-align: center;
   color: var(--muted);
   font-size: 0.9rem;
   border-top: 1px solid var(--border);
   padding-top: 15px;
+  margin-top: 20px;
 }
+
 
 /* Selector de cantidad en tarjetas */
 .qty-select {
@@ -352,3 +355,6 @@
   opacity: .75;
   user-select: none;
 }
+
+
+
