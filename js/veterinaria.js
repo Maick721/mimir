@@ -1,6 +1,6 @@
 // Esperar a que el contenido se cargue
 document.addEventListener("DOMContentLoaded", () => {
-  const elementos = document.querySelectorAll(".animar-izquierda, .animar-derecha, .animar-abajo");
+  const elementos = document.querySelectorAll(".animate-left, .animate-right, .animate-down, .animate-up");
 
   const mostrarElemento = (entrada) => {
     entrada.forEach((entrada) => {
@@ -18,16 +18,17 @@ document.addEventListener("DOMContentLoaded", () => {
   elementos.forEach((el) => observador.observe(el));
 });
 
-// Animación al hacer scroll (para la sección "Cómo llegar")
+// Animación al hacer scroll (para todas las secciones "Cómo llegar")
 document.addEventListener("scroll", () => {
-  const seccion = document.querySelector(".como-llegar-section");
-  const mapa = document.querySelector(".mapa-container");
+  const secciones = document.querySelectorAll(".como-llegar-section");
 
-  if (seccion) {
+  secciones.forEach((seccion) => {
+    const mapa = seccion.querySelector(".mapa-container");
     const rect = seccion.getBoundingClientRect();
+
     if (rect.top < window.innerHeight - 100) {
       seccion.classList.add("visible");
-      mapa.classList.add("visible");
+      if (mapa) mapa.classList.add("visible");
     }
-  }
+  });
 });
