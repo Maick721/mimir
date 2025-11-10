@@ -3,71 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin</title>
+    <link rel="stylesheet" href="panel-admin.css">
     <link rel="icon" href="../logo/Icono-Petshop.png">
-    <title>Panel Admin - MimirPetShop</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="admin.css">
+
+
+
+
 </head>
 <body>
-    <nav id="navbar">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="../index.html" class="logo-link">
-                    <div class="logo">
-                        <img src="../logo/Icono-Petshop.png" alt="Logo PetShop">
-                    </div>
-                    <span class="brand">MimirPetShop Admin</span>
-                </a>
-            </div>
-            <div class="nav-menu">
-                <a href="#" class="nav-link active" id="clientesLink">Clientes</a>
-                <a href="#" class="nav-link" id="btnLogout">Cerrar Sesión</a>
-            </div>
-        </div>
-    </nav>
-
     <div class="admin-container">
         <div class="admin-header">
-            <h2>Gestión de Clientes</h2>
-            <button class="btn-primary" id="btnAddCliente">Agregar Cliente</button>
+            <h1>Panel de Administración</h1>
+            <button id="btnLogout" class="btn-delete">Cerrar Sesión</button>
         </div>
 
-        <div class="table-container">
-            <table id="clientesTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="clientesTableBody">
-                    <!-- Aquí se cargarán los clientes dinámicamente -->
-                </tbody>
-            </table>
+        <!-- 🔹 Menú de navegación entre secciones -->
+        <div class="menu-tabs">
+            <button id="tabClientes" class="tab active">Clientes</button>
+            <button id="tabProductos" class="tab">Productos</button>
         </div>
+
+        <!-- 🔹 Sección CLIENTES -->
+        <section id="clientesSection" class="section active">
+            <div class="table-container">
+                <button id="btnAddCliente" class="btn-primary">Agregar Cliente</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 🔹 Sección PRODUCTOS -->
+        <section id="productosSection" class="section">
+            <div class="table-container">
+                <button id="btnAddProducto" class="btn-primary">Agregar Producto</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Categoría</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productosTableBody"></tbody>
+                </table>
+            </div>
+        </section>
     </div>
 
-    <!-- Modal para agregar/editar cliente -->
+    <!-- 🔹 Modal CLIENTE -->
     <div id="clienteModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h3 id="modalTitle">Agregar Cliente</h3>
+            <h2 id="modalTitle">Agregar Cliente</h2>
             <form id="clienteForm">
                 <input type="hidden" id="clienteId">
                 <div class="form-group">
                     <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" required>
+                    <input type="text" id="nombre" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
                 </div>
                 <div class="form-group">
                     <label for="telefono">Teléfono:</label>
-                    <input type="tel" id="telefono" required>
+                    <input type="text" id="telefono" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 🔹 Modal PRODUCTO -->
+    <div id="productoModal" class="modal">
+        <div class="modal-content">
+            <span class="close close-producto">&times;</span>
+            <h2 id="modalTitleProducto">Agregar Producto</h2>
+            <form id="productoForm">
+                <input type="hidden" id="productoId">
+                <div class="form-group">
+                    <label for="nombreProducto">Nombre:</label>
+                    <input type="text" id="nombreProducto" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <div class="form-group">
+                    <label for="precioProducto">Precio:</label>
+                    <input type="number" id="precioProducto" step="0.01" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <div class="form-group">
+                    <label for="categoriaProducto">Categoría:</label>
+                    <input type="text" id="categoriaProducto" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
                 </div>
                 <button type="submit" class="btn-primary">Guardar</button>
             </form>
